@@ -1,0 +1,95 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+
+apiEndpoints:
+  speciesApi:
+    host: localhost
+    paths: ["/species", "/species/:id"]
+  blogsApi:
+    host: localhost
+    paths: ["/blogs", "/blogs/:id"]
+  threatsApi:
+    host: localhost 
+    paths: "/threats"
+  endangeredSpeciesApi:
+    host: localhost
+    paths: "/endangerdspecies"
+
+serviceEndpoints:
+  speciesService:
+    url: http://localhost:5000/api
+  blogsService:
+    url: http://localhost:5001/api
+  threatsService:
+    url: http://localhost:5002/api
+  endangeredSpeciesService:
+    url: http://localhost:5003/api
+
+policies:
+  - cors
+  - rate-limit
+  - proxy
+
+pipelines:
+  speciesPipeline:
+    apiEndpoints:
+      - speciesApi
+    policies:
+      - cors:
+          - action:
+              origin: "*"
+      - rate-limit:
+          - action:
+              max: 100
+              windowMs: 60000
+      - proxy:
+          - action:
+              serviceEndpoint: speciesService
+
+  blogsPipeline:
+    apiEndpoints:
+      - blogsApi
+    policies:
+      - cors:
+          - action:
+              origin: "*"
+      - rate-limit:
+          - action:
+              max: 100
+              windowMs: 60000
+      - proxy:
+          - action:
+              serviceEndpoint: blogsService
+
+  threatsPipeline:
+    apiEndpoints:
+      - threatsApi
+    policies:
+      - cors:
+          - action:
+              origin: "*"
+      - rate-limit:
+          - action:
+              max: 100
+              windowMs: 60000
+      - proxy:
+          - action:
+              serviceEndpoint: threatsService
+
+  endangeredSpeciesPipeline:
+    apiEndpoints:
+      - endangeredSpeciesApi
+    policies:
+      - cors:
+          - action:
+              origin: "*"
+      - rate-limit:
+          - action:
+              max: 100
+              windowMs: 60000
+      - proxy:
+          - action:
+              serviceEndpoint: endangeredSpeciesService
