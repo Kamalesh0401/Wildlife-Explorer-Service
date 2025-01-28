@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const EndangeredSpeciesSchema = new mongoose.Schema({
-    commonName: { type: String, required: true },
+    speciesProfile: { type: mongoose.Schema.Types.ObjectId, ref: "SpeciesProfileData" },
     endangeredStatus: {
         type: String,
         enum: ['Critically Endangered', 'Endangered', 'Vulnerable', 'Near Threatened'],
@@ -15,7 +15,9 @@ const EndangeredSpeciesSchema = new mongoose.Schema({
     conservationEfforts: { type: String, required: false },
     redListCategory: { type: String, required: true },
     protectionMeasures: [{ type: String }],
-    image: { type: String }
+    image: { type: String },
+    modifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", required: true },
+    modifiedOn: { type: Date, default: Date.now, required: true }
 });
 
 module.exports = mongoose.model('EndangeredSpecies', EndangeredSpeciesSchema);
