@@ -1,17 +1,7 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const ThreatsData = require("../models/threatsData");
+const ThreatsController = require("../controller/threatsController");
 
-// Get all threats
-router.get("/threats", async (req, res) => {
-    try {
-        const data = await ThreatsData.find();
-        res.json(data);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-});
-
+router.get('/threats', ThreatsController.getAllThreats);
 
 module.exports = router;
