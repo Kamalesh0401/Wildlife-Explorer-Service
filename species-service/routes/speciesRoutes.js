@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const SpeciesData = require("../models/SpeciesProfileData"); // Assuming you have a mongoose model
+const SpeciesData = require("../models/SpeciesProfileDataileData"); // Assuming you have a mongoose model
 
 // Get all species
 router.get("/species", async (req, res) => {
