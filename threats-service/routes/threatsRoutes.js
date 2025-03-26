@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const ThreatsData = require("../models/threatsData");
 
-// Get all threats
 router.get("/threats", async (req, res) => {
     try {
         const data = await ThreatsData.find();
