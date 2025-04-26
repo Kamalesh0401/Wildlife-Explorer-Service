@@ -34,13 +34,20 @@ const parkSchema = new mongoose.Schema({
         trim: true,
     },
     image: {
-        type: String,
+        type: String, // URL or path to the main image
         trim: true,
     },
-    gallery: {
-        type: [String],
-        default: [],
-    },
+    gallery: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Gallery',
+        validate: {
+            validator: async function (galleryId) {
+                const gallery = await mongoose.model('Gallery').findById(galleryId);
+                return !!gallery;
+            },
+            message: 'Invalid gallery ID: Gallery does not exist',
+        },
+    }],
     createdAt: {
         type: Date,
         default: Date.now,
