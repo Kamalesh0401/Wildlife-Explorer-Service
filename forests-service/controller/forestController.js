@@ -1,11 +1,12 @@
 const Gallery = require('../models/galleryModel');
+const Animal = require('../models/animalData');
 const Forest = require('../models/forest');
 
 // Get all forests
 exports.getAllForests = async (req, res) => {
     try {
         const query = req.params.name;
-        const forests = await Forest.find({ name: { $regex: new RegExp(query, 'i') } }).populate('gallery');
+        const forests = await Forest.find({ name: { $regex: new RegExp(query, 'i') } }).populate('gallery').populate('keySpecies');
         res.status(200).json({
             status: 'success',
             results: forests.length,
@@ -23,7 +24,7 @@ exports.getAllForests = async (req, res) => {
 // Get a single forest by ID
 exports.getForestById = async (req, res) => {
     try {
-        const forest = await Forest.findById(req.params.id).populate('gallery');
+        const forest = await Forest.findById(req.params.id).populate('gallery').populate('keySpecies');
         if (!forest) {
             return res.status(404).json({
                 status: 'fail',
