@@ -3,8 +3,34 @@ const Parks = require('../models/parksModel');
 // Get all parks
 exports.getAllParks = async (req, res) => {
     try {
-        const query = req.params.name;
-        const parks = await Parks.find({ name: { $regex: new RegExp(query, 'i') } });
+        const { name, region, wildlife, activity } = req.query;
+
+        // Build query object
+        const query = {};
+
+        // Filter by name (case-insensitive)
+        if (name) {
+            query.name = { $regex: new RegExp(name, 'i') };
+        }
+
+        // Filter by region (exact match)
+        if (region) {
+            query.region = region;
+        }
+
+        // Filter by wildlife (check if wildlife array contains the value)
+        if (wildlife) {
+            query.wildlife = { $in: [wildlife] };
+        }
+
+        // Filter by activity (check if activities array contains the value)
+        if (activity) {
+            query.activities = { $in: [activity] };
+        }
+
+        // Execute query
+        const parks = await Parks.find(query);
+
         res.status(200).json({
             status: 'success',
             results: parks.length,
@@ -18,7 +44,6 @@ exports.getAllParks = async (req, res) => {
         });
     }
 };
-
 // Get a single park by ID
 exports.getParkById = async (req, res) => {
     try {
