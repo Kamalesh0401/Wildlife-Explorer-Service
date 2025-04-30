@@ -1,4 +1,5 @@
 const Parks = require('../models/parksModel');
+const Animal = require('../models/animalData');
 
 // Get all parks
 exports.getAllParks = async (req, res) => {
@@ -15,12 +16,12 @@ exports.getAllParks = async (req, res) => {
 
         // Filter by region (exact match)
         if (region) {
-            query.region = region;
+            query.location = region;    
         }
 
         // Filter by wildlife (check if wildlife array contains the value)
         if (wildlife) {
-            query.wildlife = { $in: [wildlife] };
+            query.majorAnimals = { $in: [wildlife] };
         }
 
         // Filter by activity (check if activities array contains the value)
@@ -47,7 +48,10 @@ exports.getAllParks = async (req, res) => {
 // Get a single park by ID
 exports.getParkById = async (req, res) => {
     try {
-        const park = await Parks.findById(req.params.id);
+        const park = await Parks.findById(req.params.id).populate({
+            path: 'majorAnimals',
+            select: 'name scientificName habitat conservationStatus image',
+        });
         if (!park) {
             return res.status(404).json({
                 status: 'fail',
